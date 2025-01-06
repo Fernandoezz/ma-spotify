@@ -17,6 +17,7 @@ const HomeScreen = () => {
   const [favoriteArtists, setFavoriteArtists] = useState([]);
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [clickCount, setClickCount] = useState(0); // Tracks the number of clicks
 
   // Fetch Data from MockAPI
   useEffect(() => {
@@ -40,8 +41,13 @@ const HomeScreen = () => {
     fetchData();
   }, []);
 
+  // Increment the click count
+  const handleClick = () => {
+    setClickCount((prevCount) => prevCount + 1);
+  };
+
   const renderPlaylistItem = ({ item }) => (
-    <TouchableOpacity style={styles.playlistCard}>
+    <TouchableOpacity style={styles.playlistCard} onPress={handleClick}>
       <Image source={{ uri: item.image }} style={styles.playlistImage} />
       <Text style={styles.playlistTitle} numberOfLines={1}>
         {item.title}
@@ -53,7 +59,7 @@ const HomeScreen = () => {
   );
 
   const renderArtistItem = ({ item }) => (
-    <TouchableOpacity style={styles.artistCard}>
+    <TouchableOpacity style={styles.artistCard} onPress={handleClick}>
       <Image source={{ uri: item.image }} style={styles.artistImage} />
       <Text style={styles.artistName} numberOfLines={1}>
         {item.title}
@@ -76,21 +82,27 @@ const HomeScreen = () => {
       <View style={styles.header}>
         <Text style={styles.greeting}>Good afternoon</Text>
         <View style={styles.headerIcons}>
-          <Icon name="notifications-outline" size={20} color="#FFF" style={styles.icon} />
-          <Icon name="time-outline" size={20} color="#FFF" style={styles.icon} />
-          <Icon name="settings-outline" size={20} color="#FFF" style={styles.icon} />
+          <TouchableOpacity onPress={handleClick}>
+            <Icon name="notifications-outline" size={20} color="#FFF" style={styles.icon} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleClick}>
+            <Icon name="time-outline" size={20} color="#FFF" style={styles.icon} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleClick}>
+            <Icon name="settings-outline" size={20} color="#FFF" style={styles.icon} />
+          </TouchableOpacity>
         </View>
       </View>
 
       {/* Categories */}
       <View style={styles.categories}>
-        <TouchableOpacity style={styles.categoryButton}>
+        <TouchableOpacity style={styles.categoryButton} onPress={handleClick}>
           <Text style={styles.categoryText}>Music</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.categoryButton}>
+        <TouchableOpacity style={styles.categoryButton} onPress={handleClick}>
           <Text style={styles.categoryText}>Podcasts & Shows</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.categoryButton}>
+        <TouchableOpacity style={styles.categoryButton} onPress={handleClick}>
           <Text style={styles.categoryText}>Audiobooks</Text>
         </TouchableOpacity>
       </View>
@@ -142,18 +154,24 @@ const HomeScreen = () => {
         />
       </ScrollView>
 
+      {/* Floating Button */}
+      <TouchableOpacity style={styles.floatingButton}>
+        <Text style={styles.floatingButtonText}>{clickCount}</Text>
+        <Icon name="hand-left-outline" size={24} color="#FFF" />
+      </TouchableOpacity>
+
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleClick}>
           <Icon name="home" size={28} color="#1DB954" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleClick}>
           <Icon name="search-outline" size={28} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleClick}>
           <Icon name="library-outline" size={28} color="#FFF" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleClick}>
           <Icon name="person-circle-outline" size={28} color="#FFF" />
         </TouchableOpacity>
       </View>
@@ -260,6 +278,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#282828',
     paddingVertical: 10,
     alignItems: 'center',
+  },
+  floatingButton: {
+    position: 'absolute',
+    bottom: 80,
+    right: 20,
+    backgroundColor: '#1DB954',
+    borderRadius: 30,
+    padding: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  floatingButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    marginRight: 8,
   },
 });
 
